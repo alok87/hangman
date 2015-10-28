@@ -3,20 +3,22 @@
 import random, sys, os, string
 
 class Play:
-	attempts = 1
-	maxAttempt = 7
-	leftAttempts = 7
-	dataFile = 'tmp/beatlesHits.lst.new'
-
-	lettersinLine = []
-	lettersSelected = []
-	correctGuess = []
-	lettersList = {}
+	dataFile = 'tmp/beatlesHits.lst'
 
 	def __init__(self):
+		self.attempts = 1
+		self.maxAttempt = 7
+		self.leftAttempts = 7
+
+
+		self.lettersinLine = []
+		self.lettersSelected = []
+		self.correctGuess = []
+		self.lettersList = {}
+
 		self.line = {}
 		for key in range(65,91):
-			Play.lettersList[key] = chr(key)
+			self.lettersList[key] = chr(key)
 		self.setRandomLine()
 
 	def getLine(self):
@@ -29,14 +31,14 @@ class Play:
 		self.setRandomLine()
 
 	def setRandomLine(self):
-		self.line = random.choice(open(Play.dataFile).readlines())
+		self.line = random.choice(open(self.dataFile).readlines())
 		self.line = self.line[:-1]
 		self.lengthLine = len(self.line)
 		for charLine in self.line:
 			charLine = charLine.upper()
 			if ord(charLine) >= 65 and ord(charLine) <= 90:
-				if ord(charLine) not in Play.lettersinLine:
-					Play.lettersinLine.append(ord(charLine))
+				if ord(charLine) not in self.lettersinLine:
+					self.lettersinLine.append(ord(charLine))
 
 	def showGuessedBox(self):
 		output = []
@@ -44,7 +46,7 @@ class Play:
 	    		chrt = chrt.upper()
 	        	chrtNum = ord(chrt)
 	        	if chrtNum in range(ord('A'),ord('Z')+1):
-	                	if chrtNum in Play.lettersSelected:
+	                	if chrtNum in self.lettersSelected:
 	                        	output.append(chrt)
 	                	else:
 	                        	output.append("_")
@@ -54,15 +56,15 @@ class Play:
 
 	def processInput(self, input):
 		userNum = ord(input)
-	    	if userNum in Play.lettersList.keys():
-	    		if userNum not in Play.lettersSelected:
-	        		Play.lettersSelected.append(userNum)
-	            		if userNum in Play.lettersinLine:
-	            			Play.correctGuess.append(userNum)
+	    	if userNum in self.lettersList.keys():
+	    		if userNum not in self.lettersSelected:
+	        		self.lettersSelected.append(userNum)
+	            		if userNum in self.lettersinLine:
+	            			self.correctGuess.append(userNum)
 					return 0
 	            		elif input not in self.line:
-	                		Play.attempts += 1
-	                		Play.leftAttempts -= 1
+	                		self.attempts += 1
+	                		self.leftAttempts -= 1
 					return 1
 			else:
 				return 2
@@ -70,8 +72,10 @@ class Play:
 				return 2
 
 	def checkResult(self):
-		if Play.attempts < Play.maxAttempt:
-			if sorted(Play.lettersinLine) == sorted(Play.correctGuess):
+		print self.lettersinLine
+		print self.correctGuess
+		if self.attempts < self.maxAttempt:
+			if sorted(self.lettersinLine) == sorted(self.correctGuess):
                         	output = "0" #game won
 			else:
 				output = "2" #game is still on

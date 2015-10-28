@@ -8,7 +8,7 @@ dbObj = db.dataBase()
 @flaskInstance.route('/')
 def showView():
 	play  = Play()
-	play.resetInstance()
+	
 	id = dbObj.store(play)
 	return render_template("hangman.html",
 			       title='Hangman',
