@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<!-- <div class="bs-docs-section">
+		<div class="bs-component"> -->
+
+			<!-- Hangman Image -->
+			<br><br>
+			{% set imageName = '../static/hangman-pics/' + 'hang_' + Play.attempts|string + '.gif' %}
+			<img id="hangman" src="{{ imageName }}" style="width:110x;height:110px;" align="middle">
+
+			<!-- Letters List -->
+			<br>
+			<p><table id="lettersList" class="table table-striped table-hover ">
+				<tbody>
+            <tr>
+							{% set lc = 0 %}
+            	{% for key,value in Play.lettersList.iteritems() %}
+							{% if lc%10 == 0 %}
+								</tr><tr>
+							{% endif %}
+							<td id={{ value }} align=center>{{ value }}</td>
+							{% set lc = lc + 1 %}
+						{% endfor %}
+						</tr>
+        </tbody>
+			</table><br></p>
+
+			<!-- Guessed Box -->
+			<table class="table table-striped table-hover ">
+				<tbody>
+					<tr>
+						<td>
+							{% set outPutGuessBox = Play.showGuessedBox() %}
+							<pre>
+							<span id='guessBox'>{% for item in outPutGuessBox %}{{ item }} {% endfor %}</span>
+							</pre>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<table class="table table-striped table-hover ">
+				<tbody>
+					<tr>
+						<td>
+							<span id="result">Game in progress...</span>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<script>
+				var resulter = 1
+				function processInput(input) {
+					$.ajax({
+						url: '/process',
+						type: "POST",
+						dataType: "json",
+						data: { input_sent: input,
+										id_sent: 	{{ id }}
+						},
+						success: function(data) {
+							  var element = document.getElementById(data.charInput);
+								var imagePath = "../static/hangman-pics/hang_";
+								var imagePath = imagePath.concat(data.hangManNo);
+								var imagePath = imagePath.concat(".gif");
+
+								switch (data.result) {
+									case "0":
+													element.className='success';
+
+													$('#guessBox').text("");
+													$.each(data.guessResult, function(index, value) {
+															//alert(value);
+															$("#guessBox").append(value);
+															$('#guessBox').append(" ");
+													});
+
+													$('#hangman').attr("src",imagePath);
+													break;
+
+									case "1":
+													element.className='danger';
+													$('#hangman').attr("src",imagePath);
+													break;
+									default:
+
+								}
+
+								switch (data.gameResult) {
+										case "0":
+														$('#result').text("You Won !");
+														resulter = 11;
+														break;
+										case "1":
+														$('#result').text("You Lost! Answer: ");
+														$('#result').append(data.answer);
+														resulter = 11;
+														break;
+										default:
+														$('#result').text("Game in Progress...");
+								}
+						},
+						error: function(error) {
+								console.log(error);
+						}
+					});
+				}
+
+				$('body').on('click','td', function() {
+							if (resulter == 11) {
+								$(this).off("click");
+							} else {
+								var input = $(this).text();
+								processInput(input);
+							}
+				});
+			</script>
+
+    <!--</div>
+ 	</div>-->
+</div>
+{% endblock %}

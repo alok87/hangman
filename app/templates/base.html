@@ -1,0 +1,47 @@
+<html>
+  <head>
+   	<meta charset="utf-8">
+   	<meta name="viewport" content="width=device-width, initial-scale=1">
+   	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+   	<link rel="stylesheet" href="../static/css/bootstrap.css" media="screen">
+   	<link rel="stylesheet" href="../static/css/bootswatch.min.css">
+	<link rel="shortcut icon" href="../static/{{title}}.ico" type="image/x-icon">
+    	{% if title %}
+    		<title>{{ title }}</title>
+    	{% else %}
+    		<title>Play Hangman</title>
+    	{% endif %}
+  </head>
+  <body>
+  	<header>
+  	<div class="navbar navbar-default navbar-fixed-top">
+        	<div class="container">
+        		<div class="navbar-header">
+                		<a href="/" class="navbar-brand"><b>Hangman</b></a>
+                		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
+                			<span class="icon-bar"></span>
+            				<span class="icon-bar"></span>
+            				<span class="icon-bar"></span>
+                		</button>
+                	</div>
+                	<div class="navbar-collapse collapse" id="navbar-main">
+                		<ul class="nav navbar-nav navbar-right">
+                		</ul>
+                	</div>
+	</div>
+  	</header>
+
+  {% block content %}{% endblock %}
+
+  </body>
+  <footer class="text-center">
+  	<h3>Letters</h3>
+        <div class="bs-component" style="margin-bottom: 10px;">
+        	<!--<span class="label label-info">Info</span>-->
+        	<span class="label label-success">Correct Guess</span>
+        	<span class="label label-danger">Wrong Guess</span>
+        	<!--<span class="label label-warning">Warning</span>
+        	<span class="label label-default"></span>-->
+        </div>
+  </footer>
+</html>
