@@ -7,16 +7,16 @@
 
 			<!-- Hangman Image -->
 			<br><br>
-			{% set imageName = '../static/hangman-pics/' + 'hang_' + Play.attempts|string + '.gif' %}
-			<img id="hangman" src="{{ imageName }}" style="width:110x;height:110px;" align="middle">
+			{% set image_name = '../static/hangman-pics/' + 'hang_' + Play.attempts|string + '.gif' %}
+			<img id="hangman" src="{{ image_name }}" style="width:110x;height:110px;" align="middle">
 
 			<!-- Letters List -->
 			<br><br>
-			<table id="lettersList" class="table table-striped table-hover ">
+			<table id="ltrs_list" class="table table-striped table-hover ">
 				<tbody>
             <tr>
 							{% set lc = 0 %}
-            	{% for key,value in Play.lettersList.iteritems() %}
+            	{% for key,value in Play.ltrs_list.iteritems() %}
 							{% if lc%10 == 0 %}
 								</tr><tr>
 							{% endif %}
@@ -32,9 +32,9 @@
 				<tbody>
 					<tr>
 						<td>
-							{% set outPutGuessBox = Play.showGuessedBox() %}
+							{% set box_r = Play.show_box() %}
 							<pre>
-							<span id='guessBox'>{% for item in outPutGuessBox %}{{ item }} {% endfor %}</span>
+							<span id='guessBox'>{% for item in box_r %}{{ item }} {% endfor %}</span>
 							</pre>
 						</td>
 					</tr>
@@ -52,7 +52,7 @@
 			</table>
 			<script>
 				var resulter = 1
-				function processInput(input) {
+				function process_input(input) {
 					$.ajax({
 						url: '/process',
 						type: "POST",
@@ -61,34 +61,34 @@
 										id_sent: 	{{ id }}
 						},
 						success: function(data) {
-							  var element = document.getElementById(data.charInput);
-								var imagePath = "../static/hangman-pics/hang_";
-								var imagePath = imagePath.concat(data.hangManNo);
-								var imagePath = imagePath.concat(".gif");
+							  var element = document.getElementById(data.char_input);
+								var image_path = "../static/hangman-pics/hang_";
+								var image_path = image_path.concat(data.image_no);
+								var image_path = image_path.concat(".gif");
 
 								switch (data.result) {
 									case "0":
 													element.className='success';
 
 													$('#guessBox').text("");
-													$.each(data.guessResult, function(index, value) {
+													$.each(data.box_r, function(index, value) {
 															//alert(value);
 															$("#guessBox").append(value);
 															$('#guessBox').append(" ");
 													});
 
-													//$('#hangman').attr("src",imagePath);
+													//$('#hangman').attr("src",image_path);
 													break;
 
 									case "1":
 													element.className='danger';
-													$('#hangman').attr("src",imagePath);
+													$('#hangman').attr("src",image_path);
 													break;
 									default:
 
 								}
 
-								switch (data.gameResult) {
+								switch (data.game_r) {
 										case "0":
 														$('#result').text("You Won !");
 														resulter = 11;
@@ -113,7 +113,7 @@
 								$(this).off("click");
 							} else {
 								var input = $(this).text();
-								processInput(input);
+								process_input(input);
 							}
 				});
 			</script>

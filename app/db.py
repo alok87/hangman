@@ -1,15 +1,15 @@
 import time
 
-class dataBase:
+class DataBase:
 	db = {}
 
 	def __init__(self):
-		dataBase.db = {}
+		DataBase.db = {}
 
 	def store(self, play):
 		id = int(time.time())
-		dataBase.db[id] = play
+		DataBase.db[id] = play
 		return id
 
 	def get(self, id):
-		return dataBase.db[id]
+		return DataBase.db[id]

@@ -1,5 +1,5 @@
 from flask import Flask
 
-flaskInstance = Flask(__name__)
+app = Flask(__name__)
 
 from app import views
