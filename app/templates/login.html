@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <div class="bs-docs-section">
+        <div class="bs-component">
+            <script type="text/javascript">
+                function set_openid(openid, pr)
+                {
+                    u = openid.search('<username>')
+                    if (u != -1) {
+                        // openid requires username
+                        user = prompt('Enter your ' + pr + ' username:')
+                        openid = openid.substr(0, u) + user
+                    }
+                    form = document.forms['login'];
+                    form.elements['openid'].value = openid
+                }
+            </script>
+            <table id="ltrs_list" class="table table-bordered table-hover">
+                <tbody>
+                    <form action="" method="post" name="login">
+                        {{ form.hidden_tag() }}
+                        <tr>
+                            <td class=info align="center"><br><br>Login with OpenID</td>
+                            <td>{{ form.openid(size=80) }}<br>
+                            {% with messages = get_flashed_messages() %}
+                            {% if messages %}
+                            {% for message in messages %}
+                                {{ message }}<br>
+                            {% endfor %}
+                            {% endif %}
+                            {% endwith %}
+                            <br>{{ form.remember_me }} Remember Me<br>
+                                <br><input type="submit" value="Sign In">
+                            </td>
+                        </tr>
+                    </form>
+                </tbody>
+            </table><br>
+            |{% for pr in providers %}
+          <a href="javascript:set_openid('{{ pr.url }}', '{{ pr.name }}');">{{ pr.name }}</a> |
+        {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
