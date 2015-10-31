@@ -1,46 +1,76 @@
-{% extends "base.html" %}
-{% block content %}
-<div class="container">
-    <div class="bs-docs-section">
-        <div class="bs-component">
-            <script type="text/javascript">
-                function set_openid(openid, pr)
-                {
-                    u = openid.search('<username>')
-                    if (u != -1) {
-                        // openid requires username
-                        user = prompt('Enter your ' + pr + ' username:')
-                        openid = openid.substr(0, u) + user
-                    }
-                    form = document.forms['login'];
-                    form.elements['openid'].value = openid
+<html lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+        {% if title %}
+    		<title>{{ title }}</title>
+    	{% else %}
+    		<title>Login</title>
+    	{% endif %}
+        <meta name="generator" content="Bootply" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<link href="../static/css/bootstrap.login.min.css" rel="stylesheet">
+		<!--[if lt IE 9]>
+			<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+		<link href="../static/css/styles.login.css" rel="stylesheet">
+        <script>
+            function set_openid(openid, pr)
+            {
+                u = openid.search('<username>')
+                if (u != -1) {
+                    // openid requires username
+                    user = prompt('Enter your ' + pr + ' username:')
+                    openid = openid.substr(0, u) + user
                 }
-            </script>
-            <table id="ltrs_list" class="table table-bordered table-hover">
-                <tbody>
-                    <form action="" method="post" name="login">
-                        {{ form.hidden_tag() }}
-                        <tr>
-                            <td class=info align="center"><br><br>Login with OpenID</td>
-                            <td>{{ form.openid(size=80) }}<br>
-                            {% with messages = get_flashed_messages() %}
-                            {% if messages %}
-                            {% for message in messages %}
-                                {{ message }}<br>
-                            {% endfor %}
-                            {% endif %}
-                            {% endwith %}
-                            <br>{{ form.remember_me }} Remember Me<br>
-                                <br><input type="submit" value="Sign In">
-                            </td>
-                        </tr>
-                    </form>
-                </tbody>
-            </table><br>
-            |{% for pr in providers %}
-          <a href="javascript:set_openid('{{ pr.url }}', '{{ pr.name }}');">{{ pr.name }}</a> |
-        {% endfor %}
-        </div>
-    </div>
+                form = document.forms['login'];
+                form.elements['openid'].value = openid
+            }
+        </script>
+	</head>
+	<body>
+<!--login modal-->
+<div id="loginModal" class="modal show" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+  <div class="modal-content">
+      <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h1 class="text-center">Login with Openid</h1>
+      </div>
+      <div class="modal-body">
+          <form action="" method="post" class="form col-md-12 center-block" name="login">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                {{ form.openid(size=75) }}<br>
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                {% for message in messages %}
+                    {{ message }}<br>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+                <br>{{ form.remember_me }} Remember Me<br><br>
+                Sign In with:
+                |{% for pr in providers %}
+                <a href="javascript:set_openid('{{ pr.url }}', '{{ pr.name }}');">{{ pr.name }}</a> |
+                {% endfor %}
+            </div>
+            <div class="form-group">
+              <button class="btn btn-primary btn-lg btn-block">Sign In</button>
+              <!--<span class="pull-right"><a href="#">Register</a></span><span><a href="#">Need help?</a></span>-->
+            </div>
+          </form>
+      </div>
+      <div class="modal-footer">
+          <div class="col-md-12">
+          <!--<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>-->
+		  </div>
+      </div>
+  </div>
+  </div>
 </div>
-{% endblock %}
+	<!-- script references -->
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+	</body>
+</html>
