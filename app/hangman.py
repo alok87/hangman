@@ -11,6 +11,7 @@ class Play:
 		self.left_try = 7
 
 		self.ltrs_in_line = []
+		self.category = "beatles_hits"
 		self.ltrs_selectd = []
 		self.ltrs_gussed = []
 		self.ltrs_list = {}
@@ -22,6 +23,9 @@ class Play:
 
 	def get_line(self):
 		return self.line
+	
+	def get_category(self):
+		return self.category
 
 	def set_random_line(self):
 		self.line = random.choice(open(self.data_file).readlines())
