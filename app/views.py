@@ -59,6 +59,7 @@ def logout():
     logout_user()
     return redirect(url_for('hangman'))
 
+@app.route('/')
 @app.route('/hangman')
 @login_required
 def hangman():
@@ -81,4 +82,10 @@ def process():
 	image_r = str(play.attempts)
 	game_r = play.check_result()
 	answer = play.get_line()
+	if game_r=="0" or game_r=="1":
+		catgry = play.get_category()
+		stats = HangmanStats(user_id=g.user.id, category=catgry, result=game_r)
+		db.session.add(stats)
+		db.session.commit()
+
 	return jsonify(game_r=str(game_r), result=str(input_r), box_r=box_r, char_input=input, image_no=str(image_r), answer=str(answer))
