@@ -3,7 +3,7 @@
 import random, sys, os, string
 
 class Play:
-	data_file = 'tmp/beatlesHits.lst'
+	data_file = 'app/static/categories/beatles_songs'
 
 	def __init__(self):
 		self.attempts = 1
@@ -11,7 +11,7 @@ class Play:
 		self.left_try = 7
 
 		self.ltrs_in_line = []
-		self.category = "beatles_hits"
+		self.category = "The Beatles Songs"
 		self.ltrs_selectd = []
 		self.ltrs_gussed = []
 		self.ltrs_list = {}
@@ -23,7 +23,7 @@ class Play:
 
 	def get_line(self):
 		return self.line
-	
+
 	def get_category(self):
 		return self.category
 
@@ -68,8 +68,8 @@ class Play:
 				return 2
 
 	def check_result(self):
-		print self.ltrs_in_line
-		print self.ltrs_gussed
+		#print self.ltrs_in_line
+		#print self.ltrs_gussed
 		if self.attempts < self.max_try:
 			if sorted(self.ltrs_in_line) == sorted(self.ltrs_gussed):
                         	output = "0" #game won

@@ -74,6 +74,7 @@ def hangman():
 @app.route('/process', methods=["POST"])
 def process():
 	input = request.form.get('input_sent')
+	input = input.upper()
 	id = request.form.get('id_sent')
 	play = db_obj.get(int(id))
 	input_r = play.process_input(input)
@@ -90,7 +91,7 @@ def process():
 		g.user.matches += 1
 		db.session.commit()
 
-	return jsonify(game_r=str(game_r), result=str(input_r), box_r=box_r, char_input=input, image_no=str(image_r), answer=str(answer))
+	return jsonify(game_r=str(game_r), result=str(input_r), box_r=box_r, char_input=input, image_no=str(image_r), answer=str(answer.upper()))
 
 @app.route('/rankings')
 @login_required

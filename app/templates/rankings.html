@@ -13,10 +13,10 @@
                 <th class="info"> Loss </th>
             </tr>
             {% set r = 1 %}
-            {% set class = "" %}
             {% for key,value in rank %}
                 {% set name = key.nickname + ' (' + key.email +')'%}
             <tr>
+                {% set class = "" %}
                 {% if user == key %}
                     {% set class = "success" %}
                 {% endif %}

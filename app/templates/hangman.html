@@ -14,27 +14,27 @@
 			<br><br>
 			<table id="ltrs_list" class="table table-striped table-hover ">
 				<tbody>
-            <tr>
-							{% set lc = 0 %}
+            	<tr>
+				{% set lc = 0 %}
             	{% for key,value in Play.ltrs_list.iteritems() %}
-							{% if lc%10 == 0 %}
-								</tr><tr>
-							{% endif %}
-							<td id={{ value }} align=center>{{ value }}</td>
-							{% set lc = lc + 1 %}
-						{% endfor %}
-						</tr>
+					{% if lc%10 == 0 %}
+						</tr><tr>
+					{% endif %}
+					<td id={{ value }} align=center>{{ value }}</td>
+					{% set lc = lc + 1 %}
+				{% endfor %}
+				</tr>
         </tbody>
-			</table>
+	</table><br>
 
 			<!-- Guessed Box -->
-			<table class="table table-striped table-hover ">
+			<table class="table table-condensed table-hover ">
 				<tbody>
 					<tr>
-						<td>
+						<td align="center" class="default">
 							{% set box_r = Play.show_box() %}
 							<pre>
-							<span id='guessBox'>{% for item in box_r %}{{ item }} {% endfor %}</span>
+							<div id='guessBox'>{% for item in box_r %}{{ item }} {% endfor %}</div>
 							</pre>
 						</td>
 					</tr>
@@ -45,7 +45,7 @@
 				<tbody>
 					<tr>
 						<td>
-							<span id="result"></span>
+							<div id="result" align="center"></div>
 						</td>
 					</tr>
 				</tbody>
@@ -90,11 +90,14 @@
 
 								switch (data.game_r) {
 										case "0":
-														$('#result').text("You Won !");
+														$('#result').text("YOU  WON! ");
 														resulter = 11;
 														break;
 										case "1":
-														$('#result').text("You were hanged. Answer: ");
+														$('#result').text("H A N G E D !")
+														$('#result').append('</br>');
+														$('#result').append('</br>');
+														$('#result').append("Song: ");
 														$('#result').append(data.answer);
 														resulter = 11;
 														break;
@@ -108,13 +111,22 @@
 					});
 				}
 
+				$('body').keypress(function(e){
+					if (resulter == 11) {
+  					  $(document).unbind('keypress');
+  				  } else {
+  					  var input = String.fromCharCode( e.which );
+  					  process_input(input);
+  				  }
+				});
+
 				$('body').on('click','td', function() {
-							if (resulter == 11) {
-								$(this).off("click");
-							} else {
-								var input = $(this).text();
-								process_input(input);
-							}
+					if (resulter == 11) {
+						$(this).off("click");
+					} else {
+						var input = $(this).text();
+						process_input(input);
+					}
 				});
 			</script>
 
