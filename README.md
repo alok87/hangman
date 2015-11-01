@@ -9,8 +9,8 @@ Installation on Mac
 * Clone the repository:
 
 ```
-mkdir -p $HOME/pythonApps
-cd $HOME/pythonApps
+mkdir -p $HOME/python_apps
+cd $HOME/python_apps
 git clone git@github.com:alok87/hangman
 ```
 
@@ -24,7 +24,7 @@ sudo easy_install virtualenv
 * Create a virtual environment with the requirments file
 
 ```
-cd $HOME/pythonApps/hangman
+cd $HOME/python_apps/hangman
 source flask/bin/activate
 pip install -r requirements
 ```
@@ -32,7 +32,7 @@ pip install -r requirements
 * Start the application on the default port 5000
 
 ```
-cd $HOME/pythonApps/hangman
+cd $HOME/python_apps/hangman
 ./run.py
 ```
 
