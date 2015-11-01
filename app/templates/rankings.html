@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <br><br>
+    <table id="ltrs_list" class="table table-striped table-hover " width=400>
+        <tbody>
+            <tr>
+                <th class="info"> Rank </th>
+                <th class="info"> Player </th>
+                <th class="info"> Score </th>
+                <th class="info"> Matches </th>
+                <th class="info"> Wins </th>
+                <th class="info"> Loss </th>
+            </tr>
+            {% set r = 1 %}
+            {% set class = "" %}
+            {% for key,value in rank %}
+                {% set name = key.nickname + ' (' + key.email +')'%}
+            <tr>
+                {% if user == key %}
+                    {% set class = "success" %}
+                {% endif %}
+                <td align=left class={{ class }}>{{ r }}.</td>
+                <td id={{ key }} class={{ class }} >{{ name }}</td>
+                <td id={{ value }} class={{ class }}>{{ value }}</td>
+                <td id={{ value }} class={{ class }}>{{ key.matches }}</td>
+                <td id={{ value }} class={{ class }}>{{ key.wins }}</td>
+                <td id={{ value }} class={{ class }}>{{ key.loss }}</td>
+            </tr>
+            {% set r = r + 1 %}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

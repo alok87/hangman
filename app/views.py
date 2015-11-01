@@ -6,6 +6,7 @@ from app.hangman import Play
 from app import memdb
 from .forms import LoginForm
 from .models import User
+import operator
 
 db_obj = memdb.DataBase()
 
@@ -20,8 +21,6 @@ def before_request():
 @app.route('/login', methods=['GET', 'POST'])
 @oid.loginhandler 		#Tells Flask-OpenID that this our login function
 def login():
-	print "auth auth"
-	print g.user.is_authenticated
 	if g.user is not None and g.user.is_authenticated:
 		return redirect(url_for('hangman'))
 	form = LoginForm()
@@ -44,7 +43,7 @@ def after_login(resp):
         nickname = resp.nickname
         if nickname is None or nickname == "":
             nickname = resp.email.split('@')[0]
-        user = User(nickname=nickname, email=resp.email)
+        user = User(nickname=nickname, email=resp.email, wins=0, loss=0, matches=0)
         db.session.add(user)
         db.session.commit()
     remember_me = False
@@ -82,10 +81,27 @@ def process():
 	image_r = str(play.attempts)
 	game_r = play.check_result()
 	answer = play.get_line()
-	if game_r=="0" or game_r=="1":
-		catgry = play.get_category()
-		stats = HangmanStats(user_id=g.user.id, category=catgry, result=game_r)
-		db.session.add(stats)
+	if game_r == "0":
+		g.user.wins += 1
+		g.user.matches += 1
+		db.session.commit()
+	elif game_r == "1":
+		g.user.loss += 1
+		g.user.matches += 1
 		db.session.commit()
 
 	return jsonify(game_r=str(game_r), result=str(input_r), box_r=box_r, char_input=input, image_no=str(image_r), answer=str(answer))
+
+@app.route('/rankings')
+@login_required
+def rankings():
+	my_user = g.user
+	users = User.query.all()
+	rank = {}
+	for user in users:
+		rank[user] = (user.wins * 30) - (user.loss * 5)
+	sorted_rank = sorted(rank.items(), key=operator.itemgetter(1), reverse=True)
+	return render_template("rankings.html",
+						   title='Rankings',
+						   user=my_user,
+						   rank=sorted_rank)

@@ -4,7 +4,9 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nickname = db.Column(db.String(64), index=True, unique=True)
     email = db.Column(db.String(140), index=True, unique=True)
-    hangmanstats = db.relationship('HangmanStats', backref='author', lazy='dynamic')
+    wins = db.Column(db.Integer)
+    loss = db.Column(db.Integer)
+    matches = db.Column(db.Integer)
 
     @property
     def is_authenticated(self):
@@ -26,15 +28,3 @@ class User(db.Model):
 
     def __ref__(self):
         return '<User %r>' % (self.nickname)
-
-
-class HangmanStats(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    category = db.Column(db.String(140), index=True, unique=True)
-    matches = db.Column(db.Integer)
-    wins = db.Column(db.Integer)
-    lost = db.Column(db.Integer)
-
-    def __ref__(self):
-        return '<Stats %r>' % (self.wins)

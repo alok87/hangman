@@ -26,10 +26,11 @@
                 	</div>
                     <div class="navbar-right">
                         {% if g.user.is_authenticated %}
-                            <a href="{{ url_for('logout') }}">Logout</a>
+                            <a href="{{ url_for('rankings') }}" class="navbar-brand">Rankings</a>
+                            <a href="{{ url_for('logout') }}" class="navbar-brand">Logout</a>
                         {% endif %}
                     </div>
-                	</div>
+        </div>
 	</div>
   	</header>
 
