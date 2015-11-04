@@ -65,6 +65,7 @@ def hangman():
 	user = g.user
 	play  = Play()
 	id = db_obj.store(play)
+	print db_obj.memdb
 	return render_template("hangman.html",
 			               title='Hangman',
 						   user=user,
@@ -73,9 +74,11 @@ def hangman():
 
 @app.route('/process', methods=["POST"])
 def process():
+	print "DEBUG -------------"	
 	input = request.form.get('input_sent')
 	input = input.upper()
 	id = request.form.get('id_sent')
+	print db_obj.memdb
 	play = db_obj.get(int(id))
 	input_r = play.process_input(input)
 	box_r = play.show_box()
