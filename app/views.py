@@ -3,14 +3,11 @@ from flask.ext.login import login_required, login_user, logout_user, current_use
 from app import app
 from app import db, models, lm, oid
 from app.hangman import Play
-from app import memdb
 from .forms import LoginForm
 from .models import User
-import operator
+import operator, time, pickle
 
-db_obj = memdb.DataBase()
-
-@lm.user_loader 		#Loads the function with the Flask-Login
+@lm.user_loader 								#Loads the function with the Flask-Login
 def load_user(id):
     return User.query.get(int(id))
 
@@ -19,7 +16,7 @@ def before_request():
 	g.user = current_user
 
 @app.route('/login', methods=['GET', 'POST'])
-@oid.loginhandler 		#Tells Flask-OpenID that this our login function
+@oid.loginhandler 								#Tells Flask-OpenID that this our login function
 def login():
 	if g.user is not None and g.user.is_authenticated:
 		return redirect(url_for('hangman'))
@@ -33,7 +30,7 @@ def login():
 							form=form,
 							providers=app.config['OPENID_PROVIDERS'])
 
-@oid.after_login 		# This is method is called if the login is authenticated properly by the openid provider
+@oid.after_login 								#This is method is called if the login is authenticated properly by the openid provider
 def after_login(resp):
     if resp.email is None or resp.email == "":
         flash('Invalid login. Please try again.')
@@ -58,28 +55,33 @@ def logout():
     logout_user()
     return redirect(url_for('hangman'))
 
-@app.route('/')
+@app.route('/')									#This method is the route of the application /HOME
 @app.route('/hangman')
 @login_required
 def hangman():
 	user = g.user
 	play  = Play()
-	id = db_obj.store(play)
-	print db_obj.memdb
+	id = int(time.time()) 
+	instance_file = 'file_'+str(id)	
+	with open(instance_file, 'wb') as f:
+		pickle.dump(play, f)		
 	return render_template("hangman.html",
-			               title='Hangman',
-						   user=user,
-			               Play=play,
-			               id=id)
+				title="Hangman",
+				user=user,
+				id=id,
+				Play=play)
 
-@app.route('/process', methods=["POST"])
+
+@app.route('/process', methods=["POST"])					#This handles the ajax call for processing requests
 def process():
-	print "DEBUG -------------"	
+	#print "DEBUG -------------"	
 	input = request.form.get('input_sent')
 	input = input.upper()
 	id = request.form.get('id_sent')
-	print db_obj.memdb
-	play = db_obj.get(int(id))
+	instance_file = 'file_'+str(id)
+	with open(instance_file, 'rb') as f:
+		play = pickle.load(f)
+	print play.ltrs_selectd
 	input_r = play.process_input(input)
 	box_r = play.show_box()
 	image_r = str(play.attempts)
@@ -93,10 +95,12 @@ def process():
 		g.user.loss += 1
 		g.user.matches += 1
 		db.session.commit()
+	with open(instance_file, 'wb') as f:
+		pickle.dump(play, f)		
 
 	return jsonify(game_r=str(game_r), result=str(input_r), box_r=box_r, char_input=input, image_no=str(image_r), answer=str(answer.upper()))
 
-@app.route('/rankings')
+@app.route('/rankings')								#This shows the ranking page
 @login_required
 def rankings():
 	my_user = g.user

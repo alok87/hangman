@@ -7,7 +7,7 @@
 
 			<!-- Hangman Image -->
 			<br><br>
-			{% set image_name = '../static/hangman-pics/' + 'hang_' + Play.attempts|string + '.gif' %}
+			{% set image_name = 'static/hangman-pics/' + 'hang_' + Play.attempts|string + '.gif' %}
 			<img id="hangman" src="{{ image_name }}" style="width:110x;height:110px;" align="middle">
 
 			<!-- Letters List -->
@@ -58,11 +58,11 @@
 						type: "POST",
 						dataType: "json",
 						data: { input_sent: input,
-										id_sent: 	{{ id }}
+							id_sent: {{ id }}
 						},
 						success: function(data) {
 							  var element = document.getElementById(data.char_input);
-								var image_path = "../static/hangman-pics/hang_";
+								var image_path = "static/hangman-pics/hang_";
 								var image_path = image_path.concat(data.image_no);
 								var image_path = image_path.concat(".gif");
 
