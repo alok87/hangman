@@ -97,8 +97,12 @@ def process():
 		db.session.commit()
 	with open(instance_file, 'wb') as f:
 		pickle.dump(play, f)		
+	
+	if game_r == "1":
+		return jsonify(game_r=str(game_r), result=str(input_r), box_r=box_r, char_input=input, image_no=str(image_r), answer=str(answer.upper()))
+	else:
+		return jsonify(game_r=str(game_r), result=str(input_r), box_r=box_r, char_input=input, image_no=str(image_r))
 
-	return jsonify(game_r=str(game_r), result=str(input_r), box_r=box_r, char_input=input, image_no=str(image_r), answer=str(answer.upper()))
 
 @app.route('/rankings')								#This shows the ranking page
 @login_required
