@@ -1,9 +1,10 @@
 #!/usr/bin/python
 
 import random, sys, os, string
+from config import CATEGORY
 
 class Play:
-	data_file = 'app/static/categories/beatles_songs'
+	data_file = CATEGORY
 
 	def __init__(self):
 		self.attempts = 1

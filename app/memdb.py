@@ -4,12 +4,12 @@ class DataBase:
 	memdb = {}
 
 	def __init__(self):
-		DataBase.memdb = {}
+		self.memdb = {}
 
 	def store(self, play):
 		id = int(time.time())
-		DataBase.memdb[id] = play
+		self.memdb[id] = play
 		return id
 
 	def get(self, id):
-		return DataBase.memdb[id]
+		return self.memdb[id]

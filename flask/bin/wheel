@@ -1,4 +1,4 @@
-#!/Users/alok87/code/pythPrgms/hangman/flask/bin/python
+#!/home/ubuntu/www/hangman/flask/bin/python
 
 # -*- coding: utf-8 -*-
 import re
