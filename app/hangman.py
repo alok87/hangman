@@ -1,10 +1,7 @@
-#!/usr/bin/python
-
 import random, sys, os, string
-from config import CATEGORY
+from config import basedir
 
 class Play:
-	data_file = CATEGORY
 
 	def __init__(self):
 		self.attempts = 1
@@ -16,10 +13,12 @@ class Play:
 		self.ltrs_selectd = []
 		self.ltrs_gussed = []
 		self.ltrs_list = {}
-
 		self.line = {}
 		for key in range(65,91):
 			self.ltrs_list[key] = chr(key)
+
+	def set_data_file(self, category):
+		self.data_file = os.path.join(basedir, 'app/static/categories/', category)
 		self.set_random_line()
 
 	def get_line(self):

@@ -6,6 +6,9 @@ from app.hangman import Play
 from .forms import LoginForm
 from .models import User
 import operator, time, pickle
+from config import DEFAULT_CATEGORY
+
+default_url = 'hangman/'+DEFAULT_CATEGORY
 
 @lm.user_loader 								#Loads the function with the Flask-Login
 def load_user(id):
@@ -15,11 +18,12 @@ def load_user(id):
 def before_request():
 	g.user = current_user
 
+@app.route('/')
 @app.route('/login', methods=['GET', 'POST'])
 @oid.loginhandler 								#Tells Flask-OpenID that this our login function
 def login():
 	if g.user is not None and g.user.is_authenticated:
-		return redirect(url_for('hangman'))
+		return redirect(default_url)
 	form = LoginForm()
 
 	if form.validate_on_submit():
@@ -34,7 +38,7 @@ def login():
 def after_login(resp):
     if resp.email is None or resp.email == "":
         flash('Invalid login. Please try again.')
-        return redirect(url_for('login'))
+        return redirect(default_url)
     user = User.query.filter_by(email=resp.email).first()
     if user is None:
         nickname = resp.nickname
@@ -48,41 +52,38 @@ def after_login(resp):
         remember_me = session['remember_me']
         session.pop('remember_me', None)
     login_user(user, remember = remember_me)
-    return redirect(url_for('hangman'))
+    return redirect(default_url)
 
 @app.route('/logout')
 def logout():
     logout_user()
-    return redirect(url_for('hangman'))
+    return redirect(default_url)
 
-@app.route('/')									#This method is the route of the application /HOME
-@app.route('/hangman')
+#This method is the route of the application /HOME
+@app.route('/hangman/<category>')
 @login_required
-def hangman():
+def hangman(category):
 	user = g.user
 	play  = Play()
-	id = int(time.time()) 
-	instance_file = 'file_'+str(id)	
+	play.set_data_file(category)
+	id = int(time.time())
+	instance_file = 'file_'+str(id)
 	with open(instance_file, 'wb') as f:
-		pickle.dump(play, f)		
+		pickle.dump(play, f)
 	return render_template("hangman.html",
 				title="Hangman",
 				user=user,
 				id=id,
+                category=category,
 				Play=play)
 
 
 @app.route('/process', methods=["POST"])					#This handles the ajax call for processing requests
 def process():
-	#print "DEBUG -------------"	
+	#print "DEBUG -------------"
 	input = request.form.get('input_sent')
 	input = input.upper()
 	id = request.form.get('id_sent')
-	count = request.form.get('game_count_sent')
-	if int(count) == 1:
-		g.user.loss += 1
-		g.user.matches += 1
-		db.session.commit()
 	instance_file = 'file_'+str(id)
 	with open(instance_file, 'rb') as f:
 		play = pickle.load(f)
@@ -94,11 +95,15 @@ def process():
 	answer = play.get_line()
 	if game_r == "0":
 		g.user.wins += 1
-		g.user.loss -= 1
+		g.user.matches += 1
+		db.session.commit()
+	elif game_r == "1":
+		g.user.loss += 1
+		g.user.matches += 1
 		db.session.commit()
 	with open(instance_file, 'wb') as f:
-		pickle.dump(play, f)		
-	
+		pickle.dump(play, f)
+
 	if game_r == "1":
 		return jsonify(game_r=str(game_r), result=str(input_r), box_r=box_r, char_input=input, image_no=str(image_r), answer=str(answer.upper()))
 	else:
@@ -117,4 +122,5 @@ def rankings():
 	return render_template("rankings.html",
 						   title='Rankings',
 						   user=my_user,
+                           category='all',
 						   rank=sorted_rank)
