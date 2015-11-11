@@ -94,7 +94,7 @@
 														resulter = 11;
 														break;
 										case "1":
-														$('#result').text("H A N G E D !")
+														$('#result').text("H A N G E D !");
 														$('#result').append('</br>');
 														$('#result').append('</br>');
 														$('#result').append("Song: ");
@@ -111,14 +111,15 @@
 					});
 				}
 
-				$('body').keypress(function(e){
-					if (resulter == 11) {
-  					  $(document).unbind('keypress');
-  				  } else {
-  					  var input = String.fromCharCode( e.which );
-  					  process_input(input);
-  				  }
-				});
+				//$('body').keypress(function(e){
+				//	if (resulter == 11) {
+  				//	  $(document).unbind('keypress');
+  				 // } else {
+  				//	  var input = String.fromCharCode( e.which );
+				//	alert(input);
+  				//	  process_input(input);
+  				 // }
+				//});
 
 				$('body').on('click','td', function() {
 					if (resulter == 11) {
