@@ -2,3 +2,4 @@ dist/
 *.py[co]
 tmp/
 flask/
+file_*
