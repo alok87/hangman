@@ -51,14 +51,16 @@
 				</tbody>
 			</table>
 			<script>
-				var resulter = 1
+				var resulter = 1;
+				var gameBegun = 0;
 				function process_input(input) {
 					$.ajax({
 						url: '/process',
 						type: "POST",
 						dataType: "json",
 						data: { input_sent: input,
-							id_sent: {{ id }}
+							id_sent: {{ id }},
+							game_count_sent: gameBegun
 						},
 						success: function(data) {
 							  var element = document.getElementById(data.char_input);
@@ -111,20 +113,12 @@
 					});
 				}
 
-				//$('body').keypress(function(e){
-				//	if (resulter == 11) {
-  				//	  $(document).unbind('keypress');
-  				 // } else {
-  				//	  var input = String.fromCharCode( e.which );
-				//	alert(input);
-  				//	  process_input(input);
-  				 // }
-				//});
-
 				$('body').on('click','td', function() {
 					if (resulter == 11) {
 						$(this).off("click");
 					} else {
+						gameBegun = gameBegun + 1;
+						console.log(gameBegun);
 						var input = $(this).text();
 						process_input(input);
 					}

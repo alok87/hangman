@@ -78,6 +78,11 @@ def process():
 	input = request.form.get('input_sent')
 	input = input.upper()
 	id = request.form.get('id_sent')
+	count = request.form.get('game_count_sent')
+	if int(count) == 1:
+		g.user.loss += 1
+		g.user.matches += 1
+		db.session.commit()
 	instance_file = 'file_'+str(id)
 	with open(instance_file, 'rb') as f:
 		play = pickle.load(f)
@@ -89,11 +94,7 @@ def process():
 	answer = play.get_line()
 	if game_r == "0":
 		g.user.wins += 1
-		g.user.matches += 1
-		db.session.commit()
-	elif game_r == "1":
-		g.user.loss += 1
-		g.user.matches += 1
+		g.user.loss -= 1
 		db.session.commit()
 	with open(instance_file, 'wb') as f:
 		pickle.dump(play, f)		
